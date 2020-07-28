@@ -1,3 +1,4 @@
 export default {
-  '/': 'Events'
+  '/': 'Events',
+  '/AddOrUpdate': 'AddOrUpdateEvent'
 }
