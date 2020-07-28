@@ -1,6 +1,6 @@
 <template>
 <div>
-  <b-container fluid="sm">
+  <b-container fluid=true>
     <b-row>
   <b-col lg="2">
     <b-nav vertical  toggle-class="text-dark" text="Electronics">

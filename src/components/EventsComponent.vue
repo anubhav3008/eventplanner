@@ -1,6 +1,6 @@
 <template>
 <div>
-    <b-table striped hover small responsive=true stacked="sm" :items="usersList.data" :fields="usersListFields"></b-table>
+    <b-table striped hover small responsive=true stacked="sm" :items="usersList" :fields="usersListFields"></b-table>
     
 </div>    
 </template>
@@ -15,33 +15,16 @@
 
         data(){
             return{
-                usersList:"",
-                 usersListFields:['id','name','emailId'],
-                 user : {}
+                usersList:[],
+                 usersListFields:['title','description','users', 'tags', 'scheduledOn', 'createdBy']
               }
         },
         methods: {
             search(){
-                axios
-                    .get('https://srtmc-backend.azurewebsites.net/mgtc-1.0.0/users')
-                    .then(response => (this.usersList = response.data))
-                    .catch(error => console.log(error))
-            },
-            addUser(){
-            this.user.isActive =  true;
-            this.user.active=true;
-                axios
-                    .post('https://srtmc-backend.azurewebsites.net/mgtc-1.0.0/users/add',
-                        this.user
-                    )
-                    .then(
-                    response => {
-                    alert(response.data.success)
-                    this.search()
-                    this.user = {}
-                    }
-                    )
-                    .catch(error => console.log(error))
+               this.usersList.push({"title":"Lets play mafia","description":"Its weekend coming, lets play :)","users":["Anubhav Shrivastava"," ,Shakun Grover"],"tags":["gaming"],"createdBy":"Anubhav Shrivastava","scheduledOn":"28/07/20 01:10:15 - pm"});
+               this.usersList.push({"title":"Chess anyone?","description":"Have been so long :(","users":["Ajay Suri"],"tags":["entertainment"],"createdBy":"Ajay Suri","scheduledOn":"30/07/20 10:10:15 - pm"});
+               this.usersList.push({"title":"Toastmasters","description":"Learn public speaking & shed your inhibitions","users":["Siddhant Bhatt"],"tags":["public speaking"],"createdBy":"Siddhant Bhatt","scheduledOn":"01/08/20 01:10:15 - pm"});
+
             }
         },
         created:function () {
