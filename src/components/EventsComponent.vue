@@ -13,7 +13,7 @@
          <b-col lg="12"><b-form-textarea  v-model="add_meet_description" rows="3"
       max-rows="6" placeholder="Description"> </b-form-textarea></b-col> 
           <div align="center">
-         <b-button variant="primary" v-on:click="addMeeting">add Meeting</b-button>
+         <b-button variant="primary" v-on:click="addMeeting">add event</b-button>
          </div>
         </b-form>
               </b-col>
@@ -28,8 +28,8 @@
                      <b-button variant="secondary" size="sm" @click.stop="toggle(row.index, aggregatedList)" v-else>{{ isCurrentUserPresentInCurrentIndex(row.index, aggregatedList)? "✓":"⠀" }}</b-button>
             </template>
              <template slot="TeamsLink" slot-scope="row">
-                     <b-button size="sm" variant="success" v-if="aggregatedList[row.index].category=='ongoing' && isCurrentUserPresentInCurrentIndex(row.index, aggregatedList)"  @click.stop="openLink(row.index, aggregatedList)">Ongoing</b-button>
-                     <b-button size="sm" variant="warning" v-else-if="aggregatedList[row.index].category=='ongoing'"  @click.stop="openLink(row.index, aggregatedList)">Ongoing</b-button>
+                     <b-button size="sm" variant="success" v-if="aggregatedList[row.index].category=='ongoing' && isCurrentUserPresentInCurrentIndex(row.index, aggregatedList)"  @click.stop="openLink(row.index, aggregatedList)">Join us</b-button>
+                     <b-button size="sm" variant="warning" v-else-if="aggregatedList[row.index].category=='ongoing'"  @click.stop="openLink(row.index, aggregatedList)">Join us</b-button>
                      <b-button size="sm" variant="secondary" v-else  @click.stop="openLink(row.index, aggregatedList)">Join us</b-button>
             </template>
            
