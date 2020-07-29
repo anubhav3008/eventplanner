@@ -1,5 +1,6 @@
 <template>
 <div >
+       <i class="fa fa-unlink"></i>
 <b-container fluid=true>
        <b-row>
               <b-col lg="3">
@@ -23,8 +24,8 @@
 
 
             <template slot="Subscribe" slot-scope="row">
-                     <b-button variant="success" size="sm" @click.stop="toggle(row.index, aggregatedList)" v-if="isCurrentUserPresentInCurrentIndex(row.index, aggregatedList)">{{ isCurrentUserPresentInCurrentIndex(row.index, aggregatedList)? "Subscribed":"Subscribe" }}</b-button>
-                     <b-button variant="secondary" size="sm" @click.stop="toggle(row.index, aggregatedList)" v-else>{{ isCurrentUserPresentInCurrentIndex(row.index, aggregatedList)? "Subscribed":"Subscribe" }}</b-button>
+                     <b-button variant="success" size="sm" @click.stop="toggle(row.index, aggregatedList)" v-if="isCurrentUserPresentInCurrentIndex(row.index, aggregatedList)">{{ isCurrentUserPresentInCurrentIndex(row.index, aggregatedList)? "✓":" ✘" }}</b-button>
+                     <b-button variant="secondary" size="sm" @click.stop="toggle(row.index, aggregatedList)" v-else>{{ isCurrentUserPresentInCurrentIndex(row.index, aggregatedList)? "✓":" ✘" }}</b-button>
             </template>
              <template slot="TeamsLink" slot-scope="row">
                      <b-button size="sm" variant="success" v-if="aggregatedList[row.index].category=='ongoing' && isCurrentUserPresentInCurrentIndex(row.index, aggregatedList)"  @click.stop="openLink(row.index, aggregatedList)">Join us</b-button>
@@ -44,7 +45,7 @@
 </b-container>
 </div>    
 </template>
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
 <script>
 
     import axios from 'axios'
@@ -77,8 +78,8 @@
               currentUserEmail : "anshriv@microsoft.com",
               currentUserName : "Anubhav Shrivastava",
               
-              fieldsList: ['Title', 'Description', 'Participants','Oraganizer', 'Time','Subscribe', "TeamsLink"],
-              aggregatedFeildsList: ['Subscribe','Title', 'Description', 'Participants','Oraganizer', 'Time', "TeamsLink"]
+              fieldsList: ['Title', 'Description', 'Participants','Organizer', 'Time','Subscribe', "TeamsLink"],
+              aggregatedFeildsList: ['Subscribe','Title', 'Description', 'Participants','Organizer', 'Time', "TeamsLink"]
               }
         },
         
@@ -96,7 +97,7 @@
                          event.Description = this.add_meet_description;
                          event.Participants = this.currentUserName;
                          event.ParticipantsMail=this.currentUserEmail;
-                         event.Oraganizer=this.currentUserName;
+                         event.Organizer=this.currentUserName;
                          var date_test = new Date((this.add_meet_date+" "+this.add_meet_start_time).replace(/-/g,"/"));
                          console.log(date_test);
                          event.Time = date_test.toDateString() + " " + date_test.toLocaleTimeString();
@@ -213,7 +214,7 @@
                          }
 
                         
-                         user.Oraganizer = this.usersListBase[x].createdBy.name;
+                         user.Organizer = this.usersListBase[x].createdBy.name;
                          console.log("date found  = "+ this.usersListBase[x].scheduledOn);
                          var EventStartTime  = new Date(this.usersListBase[x].scheduledOn);
                          
