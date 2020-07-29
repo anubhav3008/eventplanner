@@ -2,7 +2,7 @@
 <div>
 
          <h3>Subscribed</h3>
-    <b-table striped hover small responsive=true stacked="sm" :items="subscribedList" :fields="fieldsList">
+    <b-table striped hover small responsive=true stacked="sm" :items="subscribedList" :fields="fieldsList" :fixed=true>
 
             <template slot="Subscribe" slot-scope="row">
                      <b-button size="sm" @click.stop="toggle(row.index, subscribedList)">{{ isCurrentUserPresentInCurrentIndex(row.index, subscribedList)? "Unsubscribe":"Subscribe" }}</b-button>
@@ -10,7 +10,7 @@
     </b-table>
 
        <h3>Ongoing</h3>
-    <b-table striped hover small responsive=true stacked="sm" :items="usersList" :fields="fieldsList">
+    <b-table striped hover small responsive=true stacked="sm" :items="usersList" :fields="fieldsList" :fixed=true>
 
            <template slot="Subscribe" slot-scope="row">
                      <b-button size="sm" @click.stop="toggle(row.index, usersList)">{{ isCurrentUserPresentInCurrentIndex(row.index, usersList)? "Unsubscribe":"Subscribe" }}</b-button>
@@ -18,7 +18,7 @@
 
     </b-table>
     <h3>Up Coming</h3>
-     <b-table striped hover small responsive=true stacked="sm" :items="upcoming" :fields="fieldsList">
+     <b-table striped hover small responsive=true stacked="sm" :items="upcoming" :fields="fieldsList" :fixed=true>
             <template slot="Subscribe" slot-scope="row">
                      <b-button size="sm" @click.stop="toggle(row.index, upcoming)">{{ isCurrentUserPresentInCurrentIndex(row.index, upcoming)? "Unsubscribe":"Subscribe" }}</b-button>
             </template>
