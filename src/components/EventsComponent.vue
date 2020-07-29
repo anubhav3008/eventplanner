@@ -32,6 +32,10 @@
                      <b-button size="sm" variant="warning" v-else-if="aggregatedList[row.index].category=='ongoing'"  @click.stop="openLink(row.index, aggregatedList)">Join us</b-button>
                      <b-button size="sm" variant="secondary" v-else  @click.stop="openLink(row.index, aggregatedList)">Join us</b-button>
             </template>
+             <template slot="Time" slot-scope="row">
+                     {{ aggregatedList[row.index].category=='ongoing'?'Ongoing':aggregatedList[row.index].Time }}
+            </template>
+            
            
             
     </b-table>
@@ -84,8 +88,7 @@
         },
         
         methods: {
-
-               openLink(x, events){
+              openLink(x, events){
                       window.open(events[x].TeamsLink, '_blank');
 
                },
