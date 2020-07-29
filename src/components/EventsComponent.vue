@@ -1,6 +1,8 @@
 <template>
 <div >
-
+<b-container fluid=true>
+       <b-row>
+              <b-col lg="3">
          <b-form>
          <b-col lg="12"><b-form-input type="text" v-model="add_meet_title" placeholder="Title"> </b-form-input></b-col>
          <b-col lg="4"><b-form-input type="date" v-model="add_meet_date"> </b-form-input></b-col>
@@ -13,46 +15,29 @@
          <b-button variant="primary" v-on:click="addMeeting">add Meeting</b-button>
          </div>
         </b-form>
+              </b-col>
+              <b-col lg="9">
 
 
-         <h3>Subscribed</h3>
-    <b-table striped hover small responsive=true stacked="sm" :items="subscribedList" :fields="fieldsList" :fixed=true>
+<b-table striped hover small responsive=true stacked="sm" :items="aggregatedList" :fields="aggregatedFeildsList" :fixed=true>
+
 
             <template slot="Subscribe" slot-scope="row">
-                     <b-button size="sm" @click.stop="toggle(row.index, subscribedList)">{{ isCurrentUserPresentInCurrentIndex(row.index, subscribedList)? "Unsubscribe":"Subscribe" }}</b-button>
+                     <b-button variant="success" size="sm" @click.stop="toggle(row.index, aggregatedList)" v-if="isCurrentUserPresentInCurrentIndex(row.index, aggregatedList)">{{ isCurrentUserPresentInCurrentIndex(row.index, aggregatedList)? "Subscribed":"Subscribe" }}</b-button>
+                     <b-button variant="secondary" size="sm" @click.stop="toggle(row.index, aggregatedList)" v-else>{{ isCurrentUserPresentInCurrentIndex(row.index, aggregatedList)? "Subscribed":"Subscribe" }}</b-button>
             </template>
              <template slot="TeamsLink" slot-scope="row">
-                     <b-button size="sm" @click.stop="openLink(row.index, subscribedList)">Join</b-button>
+                     <b-button size="sm" variant="success" v-if="aggregatedList[row.index].category=='ongoing' && isCurrentUserPresentInCurrentIndex(row.index, aggregatedList)"  @click.stop="openLink(row.index, aggregatedList)">Join us</b-button>
+                     <b-button size="sm" variant="warning" v-else-if="aggregatedList[row.index].category=='ongoing'"  @click.stop="openLink(row.index, aggregatedList)">Join us</b-button>
+                     <b-button size="sm" variant="secondary" v-else  @click.stop="openLink(row.index, aggregatedList)">Join us</b-button>
             </template>
+           
             
     </b-table>
-
-       <h3>Ongoing</h3>
-    <b-table striped hover small responsive=true stacked="sm" :items="usersList" :fields="fieldsList" :fixed=true>
-
-           <template slot="Subscribe" slot-scope="row">
-                     <b-button size="sm" @click.stop="toggle(row.index, usersList)">{{ isCurrentUserPresentInCurrentIndex(row.index, usersList)? "Unsubscribe":"Subscribe" }}</b-button>
-            </template>
-              <template slot="TeamsLink" slot-scope="row">
-                     <b-button size="sm" @click.stop="openLink(row.index, usersList)">Join</b-button>
-            </template>
-
-    </b-table>
-    <h3>Up Coming</h3>
-     <b-table striped hover small responsive=true stacked="sm" :items="upcoming" :fields="fieldsList" :fixed=true>
-            <template slot="Subscribe" slot-scope="row">
-                     <b-button size="sm" @click.stop="toggle(row.index, upcoming)">{{ isCurrentUserPresentInCurrentIndex(row.index, upcoming)? "Unsubscribe":"Subscribe" }}</b-button>
-            </template>
-              <template slot="TeamsLink" slot-scope="row">
-                     <b-button size="sm" @click.stop="openLink(row.index, upcoming)">Join</b-button>
-            </template>
-
-
-
-     </b-table>
-
+           </b-col>
+       </b-row>
       <b-col lg="1"><b-form-input type="text" v-model="pat" placeholder="pat"> </b-form-input></b-col>
-
+</b-container>
 </div>    
 </template>
 
@@ -61,18 +46,22 @@
     import axios from 'axios'
     import VueAxios from 'vue-axios'
     import Vue from 'vue'
+    
+
     Vue.use(VueAxios, axios)
+    
     export default {
 
         data(){
             return{
                 usersList:[],
                 upcoming : [],
-                usersListBase : [],
+                subscribedList :[],
+                aggregatedList: [],
                 
-                rawUpcoming : [],
-                rawSubscribed : [],
-                rawOngoing : [],
+            
+               usersListBase : [],
+              
                 add_meet_title : "",
                 add_meet_description: "",
                 add_meet_start_time: "",
@@ -83,8 +72,9 @@
 
               currentUserEmail : "anshriv@microsoft.com",
               currentUserName : "Anubhav Shrivastava",
-              subscribedList :[],
-              fieldsList: ['Title', 'Description', 'Participants','Oraganizer', 'Time','Subscribe', "TeamsLink"]
+              
+              fieldsList: ['Title', 'Description', 'Participants','Oraganizer', 'Time','Subscribe', "TeamsLink"],
+              aggregatedFeildsList: ['Subscribe','Title', 'Description', 'Participants','Oraganizer', 'Time', "TeamsLink"]
               }
         },
         
@@ -97,8 +87,7 @@
 
                addMeeting(){
 
-                      this.usersListBase.push({"title":"Lets play mafias","description":"Its weekend coming, lets play :)","users":[{"email":"shgrover@microsoft.com","name":"Shakun grover"},{"email":"anshriv@microsoft.com","name":"Anubhav Shrivastava"}],"tags":["gaming"],"createdBy":{"email":"anshriv@microsoft.com","name":"Anubhav Shrivastava"},"scheduledOn":"29 Jul 2020 00:30:00 GMT","timeInMunutes":"60"});
-                       var event  = {};
+                        var event  = {};
                          event.Title = this.add_meet_title;
                          event.Description = this.add_meet_description;
                          event.Participants = this.currentUserName;
@@ -130,7 +119,9 @@
                            event.TeamsLink = "https://teams.microsoft.com/l/channel/19%3ae8de8208f2be45a89ef7ebae99440a3a%40thread.tacv2/General?groupId=79783299-3f1e-4adf-a5d7-c7fa68cca14e&tenantId=72f988bf-86f1-41af-91ab-2d7cd011db47";
                     });
                     
+                     event.category = "upcoming";
                      this.upcoming.push(event);
+                     this.aggregatedList.push(event);
                },
 
                isCurrentUserPresentInCurrentIndex(x, events){
@@ -239,7 +230,8 @@
                                 if(this.usersListBase[x].users[i].email == this.currentUserEmail){
 
                                        this.subscribedList.push(user);
-                                       this.rawSubscribed.push(this.usersListBase[x])
+                                       user.category="subscribed"
+                                       this.aggregatedList.push(user);
                                        subscribed = true;
                                        break;
 
@@ -247,13 +239,16 @@
                          }
 
                          if(start < current && end > current && !subscribed ){
-                                 this.rawOngoing.push(this.usersListBase[x])
+                                
 
                                 this.usersList.push(user);  // ongoing
+                                user.category = "ongoing";
+                                this.aggregatedList.push(user);
                          }
 
                          else if (!subscribed){
-                                 this.rawUpcoming.push(this.usersListBase[x])
+                                user.category = "upcoming";
+                                this.aggregatedList.push(user);
                                 this.upcoming.push(user);
                          }
 

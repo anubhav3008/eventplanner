@@ -2,12 +2,7 @@
 <div>
   <b-container fluid=true>
     <b-row>
-  <b-col lg="2">
-    <b-nav vertical  toggle-class="text-dark" text="Electronics">
-      <b-nav-item><v-link href="/">Events</v-link></b-nav-item>
-  </b-nav>
-  </b-col>
-  <b-col lg="8">
+  <b-col lg="12">
   <slot></slot>
   </b-col>
     </b-row>
