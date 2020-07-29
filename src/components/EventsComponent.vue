@@ -53,7 +53,7 @@
               currentUserEmail : "anshriv@microsoft.com",
               currentUserName : "Anubhav Shrivastava",
               subscribedList :[],
-              fieldsList: ['Title', 'Description', 'Participants', 'Participants', 'Oraganizer', 'Subscribe']
+              fieldsList: ['Title', 'Description', 'Participants','Oraganizer', 'Subscribe']
               }
         },
         
@@ -76,6 +76,19 @@
                       if(events[x].Participants.endsWith("|")){
                             events[x].Participants = events[x].Participants.substring(0, events[x].Participants.length - 1)
                      }
+                     if(events[x].Participants.endsWith("|")){
+                            events[x].Participants = events[x].Participants.substring(0, events[x].Participants.length - 1)
+                     }
+
+
+                     events[x].ParticipantsMail = events[x].ParticipantsMail.replace(this.currentUserEmail,"");
+                      if(events[x].ParticipantsMail.endsWith(",")){
+                            events[x].ParticipantsMail = events[x].ParticipantsMail.substring(0, events[x].ParticipantsMail.length - 1)
+                     }
+                     if(events[x].ParticipantsMail.endsWith(",")){
+                            events[x].ParticipantsMail = events[x].ParticipantsMail.substring(0, events[x].ParticipantsMail.length - 1)
+                     }
+
               },
               subscribe(x, events){
                      console.log(JSON.stringify(events));
@@ -84,6 +97,13 @@
                      }
                      else{
                                   events[x].Participants = events[x].Participants.concat("|"+this.currentUserName+ "|");
+                     }
+
+                     if(events[x].ParticipantsMail.endsWith(",")){
+                            events[x].ParticipantsMail = events[x].ParticipantsMail.concat(this.currentUserEmail+ ",");
+                     }
+                     else{
+                           events[x].ParticipantsMail = events[x].ParticipantsMail.concat(","+this.currentUserEmail+ ",");
                      }
 
                      
@@ -101,6 +121,17 @@
                                        user.Participants = user.Participants + "|";
                                 }
                          }
+
+                         user.ParticipantsMail = "";
+                         for(var i=0;i< this.usersListBase[x].users.length ; i++){
+                                user.ParticipantsMail = user.ParticipantsMail + this.usersListBase[x].users[i].email;
+                                if(i+1!= this.usersListBase[x].users.length){
+                                       user.ParticipantsMail = user.ParticipantsMail + ",";
+                                }
+                         }
+
+
+
                          
                          user.tags = "";
                          for( var i=0; i< this.usersListBase[x].tags.length; i++){
