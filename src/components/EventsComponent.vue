@@ -1,5 +1,9 @@
 <template>
 <div>
+
+         <h3>Subscribed</h3>
+    <b-table striped hover small responsive=true stacked="sm" :items="subscribedList"></b-table>
+
        <h3>Ongoing</h3>
     <b-table striped hover small responsive=true stacked="sm" :items="usersList"></b-table>
     <h3>Up Coming</h3>
@@ -20,7 +24,9 @@
             return{
                 usersList:[],
                 upcoming : [],
-                usersListBase : []
+                usersListBase : [],
+              currentUserEmail : "anshriv@microsoft.com",
+              subscribedList :[]
               }
         },
         methods: {
@@ -46,6 +52,9 @@
                          }
                          user.Oraganizer = this.usersListBase[x].createdBy.name;
                          
+                         
+
+
                   
                          console.log("date found  = "+ this.usersListBase[x].scheduledOn);
 
@@ -62,17 +71,26 @@
                          var end = parseInt(EventStartTime.getTime() + parseInt(this.usersListBase[x].timeInMunutes) *60000);
                          var current = new Date().getTime();
 
+                         var subscribed = false;
+                         
+                         
+                         for( var i=0; i< this.usersListBase[x].users.length; i++){
+                                console.log("emaid id found  = "+ this.usersListBase[x].users[i].email +" & ccurrent mail="+ this.currentUserEmail+ "comp= "+ this.usersListBase[x].users[i].email.localeCompare(this.currentUserEmail));
+                                if(this.usersListBase[x].users[i].email == this.currentUserEmail){
 
+                                       this.subscribedList.push(user);
+                                       subscribed = true;
+                                       break;
 
-                         if(end < current){
-                                // past event
+                                }
                          }
 
-                         if(start < current && end > current ){
+                         if(start < current && end > current && !subscribed ){
+
                                 this.usersList.push(user);  // ongoing
                          }
 
-                         else{
+                         else if (!subscribed){
                                 this.upcoming.push(user);
                          }
 
@@ -84,12 +102,13 @@
         created:function () {
                this.usersListBase.push({"title":"Lets play mafia","description":"Its weekend coming, lets play :)","users":[{"email":"shgrover@microsoft.com","name":"Shakun grover"},{"email":"anshriv@microsoft.com","name":"Anubhav Shrivastava"}],"tags":["gaming"],"createdBy":{"email":"anshriv@microsoft.com","name":"Anubhav Shrivastava"},"scheduledOn":"29 Jul 2020 00:30:00 GMT","timeInMunutes":"60"});
                this.usersListBase.push({"title":"Chess anyone?","description":"Have been so long :(, lets play :)","users":[{"email":"ajays@microsoft.com","name":"Ajay Suri"}],"tags":["gaming"],"createdBy":{"email":"ajays@microsoft.com","name":"Ajay Suri"},"scheduledOn":"30 Jul 2020 00:30:00 GMT","timeInMunutes":"60"});
-               this.usersListBase.push({"title":"Toastmasters","description":"Learn public speaking & shed your inhibitions","users":[{"email":"siddhant.bhatt@microsoft.com","name":"Siddhant Bhatt"},{"email":"anshriv@microsoft.com","name":"Anubhav Shrivastava"}],"tags":["gaming"],"createdBy":{"email":"siddhant.bhatt@microsoft.com","name":"Siddhant Bhatt"},"scheduledOn":"29 Aug 2020 00:30:00 GMT","timeInMunutes":"60"});
+               this.usersListBase.push({"title":"Toastmasters","description":"Learn public speaking & shed your inhibitions","users":[{"email":"siddhant.bhatt@microsoft.com","name":"Siddhant Bhatt"}],"tags":["gaming"],"createdBy":{"email":"siddhant.bhatt@microsoft.com","name":"Siddhant Bhatt"},"scheduledOn":"29 Jul 2020 01:30:00 GMT","timeInMunutes":"60"});
  //              this.usersListBase.push({"title":"Chess anyone?","description":"Have been so long :(","users":["Ajay Suri"],"tags":["entertainment"],"createdBy":"Ajay Suri","scheduledOn":"30/07/20 10:10:15 - pm"});
  //              this.usersListBase.push({"title":"Toastmasters","description":"Learn public speaking & shed your inhibitions","users":["Siddhant Bhatt"],"tags":["public speaking"],"createdBy":"Siddhant Bhatt","scheduledOn":"01/08/20 01:10:15 - pm"});
 
 console.log(this.usersListBase);
          this.search();
+       
         }
     }
 </script>
