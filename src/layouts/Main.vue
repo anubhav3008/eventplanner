@@ -1,6 +1,6 @@
 <template>
 <div>
-  <b-container fluid=true>
+  <b-container fluid = true>
     <b-row>
   <b-col lg="12">
   <slot></slot>

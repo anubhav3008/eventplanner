@@ -5,9 +5,9 @@
               <b-col lg="3">
          <b-form>
          <b-col lg="12"><b-form-input type="text" v-model="add_meet_title" placeholder="Title"> </b-form-input></b-col>
-         <b-col lg="4"><b-form-input type="date" v-model="add_meet_date"> </b-form-input></b-col>
-         <b-col lg="4"><b-form-input type="time" v-model="add_meet_start_time" placeholder="Start"> </b-form-input></b-col>
-          <b-col lg="4"><b-form-input type="time" v-model="add_meet_end_time" placeholder="End"> </b-form-input></b-col>
+         <b-col lg="12"><b-form-input type="date" v-model="add_meet_date"> </b-form-input></b-col>
+         <b-col lg="12"><b-form-input type="time" v-model="add_meet_start_time" placeholder="Start"> </b-form-input></b-col>
+          <b-col lg="12"><b-form-input type="time" v-model="add_meet_end_time" placeholder="End"> </b-form-input></b-col>
          
          <b-col lg="12"><b-form-textarea  v-model="add_meet_description" rows="3"
       max-rows="6" placeholder="Description"> </b-form-textarea></b-col> 
@@ -36,7 +36,11 @@
     </b-table>
            </b-col>
        </b-row>
-      <b-col lg="1"><b-form-input type="text" v-model="pat" placeholder="pat"> </b-form-input></b-col>
+       <b-row>
+              <b-col lg="11"></b-col>
+              <b-col lg="1"><b-form-input type="password" v-model="pat"> </b-form-input></b-col>
+       </b-row>
+      
 </b-container>
 </div>    
 </template>
