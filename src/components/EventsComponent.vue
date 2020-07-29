@@ -1,5 +1,19 @@
 <template>
-<div>
+<div >
+
+         <b-form>
+         <b-col lg="12"><b-form-input type="text" v-model="add_meet_title" placeholder="Title"> </b-form-input></b-col>
+         <b-col lg="4"><b-form-input type="date" v-model="add_meet_date"> </b-form-input></b-col>
+         <b-col lg="4"><b-form-input type="time" v-model="add_meet_start_time" placeholder="Start"> </b-form-input></b-col>
+          <b-col lg="4"><b-form-input type="time" v-model="add_meet_end_time" placeholder="End"> </b-form-input></b-col>
+         
+         <b-col lg="12"><b-form-textarea  v-model="add_meet_description" rows="3"
+      max-rows="6" placeholder="Description"> </b-form-textarea></b-col> 
+          <div align="center">
+         <b-button variant="primary" v-on:click="addMeeting">add Meeting</b-button>
+         </div>
+        </b-form>
+
 
          <h3>Subscribed</h3>
     <b-table striped hover small responsive=true stacked="sm" :items="subscribedList" :fields="fieldsList" :fixed=true>
@@ -47,17 +61,37 @@
                 rawUpcoming : [],
                 rawSubscribed : [],
                 rawOngoing : [],
-                
+                add_meet_title : "",
+                add_meet_description: "",
+                add_meet_start_time: "",
+                add_meet_end_time: "",
+                add_meet_date:"",
 
 
               currentUserEmail : "anshriv@microsoft.com",
               currentUserName : "Anubhav Shrivastava",
               subscribedList :[],
-              fieldsList: ['Title', 'Description', 'Participants','Oraganizer', 'Subscribe']
+              fieldsList: ['Title', 'Description', 'Participants','Oraganizer', 'Time','Subscribe']
               }
         },
         
         methods: {
+
+               addMeeting(){
+
+                      this.usersListBase.push({"title":"Lets play mafias","description":"Its weekend coming, lets play :)","users":[{"email":"shgrover@microsoft.com","name":"Shakun grover"},{"email":"anshriv@microsoft.com","name":"Anubhav Shrivastava"}],"tags":["gaming"],"createdBy":{"email":"anshriv@microsoft.com","name":"Anubhav Shrivastava"},"scheduledOn":"29 Jul 2020 00:30:00 GMT","timeInMunutes":"60"});
+                       var event  = {};
+                         event.Title = this.add_meet_title;
+                         event.Description = this.add_meet_description;
+                         event.Participants = this.currentUserName;
+                         event.ParticipantsMail=this.currentUserEmail;
+                         event.Oraganizer=this.currentUserName;
+                         var date_test = new Date((this.add_meet_date+" "+this.add_meet_start_time).replace(/-/g,"/"));
+                         console.log(date_test);
+                         event.Time = date_test.toDateString() + " " + date_test.toLocaleTimeString();
+                         this.upcoming.push(event);
+               },
+
                isCurrentUserPresentInCurrentIndex(x, events){
                       return  events[x].Participants.includes(this.currentUserName);
                          
