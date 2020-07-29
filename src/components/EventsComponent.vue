@@ -24,12 +24,12 @@
 
 
             <template slot="Subscribe" slot-scope="row">
-                     <b-button variant="success" size="sm" @click.stop="toggle(row.index, aggregatedList)" v-if="isCurrentUserPresentInCurrentIndex(row.index, aggregatedList)">{{ isCurrentUserPresentInCurrentIndex(row.index, aggregatedList)? "✓":" ✘" }}</b-button>
-                     <b-button variant="secondary" size="sm" @click.stop="toggle(row.index, aggregatedList)" v-else>{{ isCurrentUserPresentInCurrentIndex(row.index, aggregatedList)? "✓":" ✘" }}</b-button>
+                     <b-button variant="success" size="sm" @click.stop="toggle(row.index, aggregatedList)" v-if="isCurrentUserPresentInCurrentIndex(row.index, aggregatedList)">{{ isCurrentUserPresentInCurrentIndex(row.index, aggregatedList)? "✓":"⠀" }}</b-button>
+                     <b-button variant="secondary" size="sm" @click.stop="toggle(row.index, aggregatedList)" v-else>{{ isCurrentUserPresentInCurrentIndex(row.index, aggregatedList)? "✓":"⠀" }}</b-button>
             </template>
              <template slot="TeamsLink" slot-scope="row">
-                     <b-button size="sm" variant="success" v-if="aggregatedList[row.index].category=='ongoing' && isCurrentUserPresentInCurrentIndex(row.index, aggregatedList)"  @click.stop="openLink(row.index, aggregatedList)">Join us</b-button>
-                     <b-button size="sm" variant="warning" v-else-if="aggregatedList[row.index].category=='ongoing'"  @click.stop="openLink(row.index, aggregatedList)">Join us</b-button>
+                     <b-button size="sm" variant="success" v-if="aggregatedList[row.index].category=='ongoing' && isCurrentUserPresentInCurrentIndex(row.index, aggregatedList)"  @click.stop="openLink(row.index, aggregatedList)">Ongoing</b-button>
+                     <b-button size="sm" variant="warning" v-else-if="aggregatedList[row.index].category=='ongoing'"  @click.stop="openLink(row.index, aggregatedList)">Ongoing</b-button>
                      <b-button size="sm" variant="secondary" v-else  @click.stop="openLink(row.index, aggregatedList)">Join us</b-button>
             </template>
            
