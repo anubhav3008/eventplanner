@@ -21,6 +21,10 @@
             <template slot="Subscribe" slot-scope="row">
                      <b-button size="sm" @click.stop="toggle(row.index, subscribedList)">{{ isCurrentUserPresentInCurrentIndex(row.index, subscribedList)? "Unsubscribe":"Subscribe" }}</b-button>
             </template>
+             <template slot="TeamsLink" slot-scope="row">
+                     <b-button size="sm" @click.stop="openLink(row.index, subscribedList)">Join</b-button>
+            </template>
+            
     </b-table>
 
        <h3>Ongoing</h3>
@@ -29,6 +33,9 @@
            <template slot="Subscribe" slot-scope="row">
                      <b-button size="sm" @click.stop="toggle(row.index, usersList)">{{ isCurrentUserPresentInCurrentIndex(row.index, usersList)? "Unsubscribe":"Subscribe" }}</b-button>
             </template>
+              <template slot="TeamsLink" slot-scope="row">
+                     <b-button size="sm" @click.stop="openLink(row.index, usersList)">Join</b-button>
+            </template>
 
     </b-table>
     <h3>Up Coming</h3>
@@ -36,10 +43,15 @@
             <template slot="Subscribe" slot-scope="row">
                      <b-button size="sm" @click.stop="toggle(row.index, upcoming)">{{ isCurrentUserPresentInCurrentIndex(row.index, upcoming)? "Unsubscribe":"Subscribe" }}</b-button>
             </template>
+              <template slot="TeamsLink" slot-scope="row">
+                     <b-button size="sm" @click.stop="openLink(row.index, upcoming)">Join</b-button>
+            </template>
 
 
 
      </b-table>
+
+      <b-col lg="1"><b-form-input type="text" v-model="pat" placeholder="pat"> </b-form-input></b-col>
 
 </div>    
 </template>
@@ -66,16 +78,22 @@
                 add_meet_start_time: "",
                 add_meet_end_time: "",
                 add_meet_date:"",
+                pat:"",
 
 
               currentUserEmail : "anshriv@microsoft.com",
               currentUserName : "Anubhav Shrivastava",
               subscribedList :[],
-              fieldsList: ['Title', 'Description', 'Participants','Oraganizer', 'Time','Subscribe']
+              fieldsList: ['Title', 'Description', 'Participants','Oraganizer', 'Time','Subscribe', "TeamsLink"]
               }
         },
         
         methods: {
+
+               openLink(x, events){
+                      window.open(events[x].TeamsLink, '_blank');
+
+               },
 
                addMeeting(){
 
@@ -89,7 +107,30 @@
                          var date_test = new Date((this.add_meet_date+" "+this.add_meet_start_time).replace(/-/g,"/"));
                          console.log(date_test);
                          event.Time = date_test.toDateString() + " " + date_test.toLocaleTimeString();
-                         this.upcoming.push(event);
+                        
+
+                         var meetingReqest ={};
+                         meetingReqest.displayName = this.add_meet_title;
+                         meetingReqest.description =  this.add_meet_description;
+
+                        var headers ={};
+                         headers.Authorization = "Bearer "+ this.pat;
+                         
+
+
+                      axios.post("https://graph.microsoft.com/v1.0/teams/79783299-3f1e-4adf-a5d7-c7fa68cca14e/channels", meetingReqest, {
+                             headers: headers
+                             }).
+                             then(response => {
+                           console.log(response);
+                           event.TeamsLink = response.data.webUrl;
+                    })
+                    .catch(error => {
+                           console.log(error)
+                           event.TeamsLink = "https://teams.microsoft.com/l/channel/19%3ae8de8208f2be45a89ef7ebae99440a3a%40thread.tacv2/General?groupId=79783299-3f1e-4adf-a5d7-c7fa68cca14e&tenantId=72f988bf-86f1-41af-91ab-2d7cd011db47";
+                    });
+                    
+                     this.upcoming.push(event);
                },
 
                isCurrentUserPresentInCurrentIndex(x, events){
@@ -149,6 +190,7 @@
                          user.Title = this.usersListBase[x].title;
                          user.Description = this.usersListBase[x].description;
                          user.Participants = "";
+                         user.TeamsLink =this.usersListBase[x].teamsLink;
                          for(var i=0;i< this.usersListBase[x].users.length ; i++){
                                 user.Participants = user.Participants + this.usersListBase[x].users[i].name;
                                 if(i+1!= this.usersListBase[x].users.length){
@@ -174,6 +216,8 @@
                                        user.tags = user.tags+ "|";
                                 }
                          }
+
+                        
                          user.Oraganizer = this.usersListBase[x].createdBy.name;
                          console.log("date found  = "+ this.usersListBase[x].scheduledOn);
                          var EventStartTime  = new Date(this.usersListBase[x].scheduledOn);
@@ -219,10 +263,10 @@
             }
         },
         created:function () {
-               this.usersListBase.push({"title":"Lets play mafia","description":"Its weekend coming, lets play :)","users":[{"email":"shgrover@microsoft.com","name":"Shakun grover"},{"email":"anshriv@microsoft.com","name":"Anubhav Shrivastava"}],"tags":["gaming"],"createdBy":{"email":"anshriv@microsoft.com","name":"Anubhav Shrivastava"},"scheduledOn":"29 Jul 2020 00:30:00 GMT","timeInMunutes":"60"});
-               this.usersListBase.push({"title":"Chess anyone?","description":"Have been so long :(, lets play :)","users":[{"email":"ajays@microsoft.com","name":"Ajay Suri"}],"tags":["gaming"],"createdBy":{"email":"ajays@microsoft.com","name":"Ajay Suri"},"scheduledOn":"30 Jul 2020 00:30:00 GMT","timeInMunutes":"60"});
-               this.usersListBase.push({"title":"Toastmasters","description":"Learn public speaking & shed your inhibitions","users":[{"email":"siddhant.bhatt@microsoft.com","name":"Siddhant Bhatt"}],"tags":["gaming"],"createdBy":{"email":"siddhant.bhatt@microsoft.com","name":"Siddhant Bhatt"},"scheduledOn":"29 Jul 2020 01:30:00 GMT","timeInMunutes":"60"});
-               this.usersListBase.push({"title":"Pantry","description":"Lets catch up today","users":[{"email":"krishan.nagpal@microsoft.com","name":"Krishan Nagpal"}],"tags":["cofee"],"createdBy":{"email":"krishan.nagpal@microsoft.com","name":"Krishan Nagpal"},"scheduledOn":"29 Jul 2020 04:30:00 GMT","timeInMunutes":"600"});
+               this.usersListBase.push({"title":"Lets play mafia","description":"Its weekend coming, lets play :)","users":[{"email":"shgrover@microsoft.com","name":"Shakun grover"},{"email":"anshriv@microsoft.com","name":"Anubhav Shrivastava"}],"tags":["gaming"],"createdBy":{"email":"anshriv@microsoft.com","name":"Anubhav Shrivastava"},"scheduledOn":"29 Jul 2020 00:30:00 GMT","timeInMunutes":"60", "teamsLink":"https://teams.microsoft.com/l/channel/19%3ae8de8208f2be45a89ef7ebae99440a3a%40thread.tacv2/General?groupId=79783299-3f1e-4adf-a5d7-c7fa68cca14e&tenantId=72f988bf-86f1-41af-91ab-2d7cd011db47"});
+               this.usersListBase.push({"title":"Chess anyone?","description":"Have been so long :(, lets play :)","users":[{"email":"ajays@microsoft.com","name":"Ajay Suri"}],"tags":["gaming"],"createdBy":{"email":"ajays@microsoft.com","name":"Ajay Suri"},"scheduledOn":"30 Jul 2020 00:30:00 GMT","timeInMunutes":"60", "teamsLink":"https://teams.microsoft.com/l/channel/19%3ae8de8208f2be45a89ef7ebae99440a3a%40thread.tacv2/General?groupId=79783299-3f1e-4adf-a5d7-c7fa68cca14e&tenantId=72f988bf-86f1-41af-91ab-2d7cd011db47"});
+               this.usersListBase.push({"title":"Toastmasters","description":"Learn public speaking & shed your inhibitions","users":[{"email":"siddhant.bhatt@microsoft.com","name":"Siddhant Bhatt"}],"tags":["gaming"],"createdBy":{"email":"siddhant.bhatt@microsoft.com","name":"Siddhant Bhatt"},"scheduledOn":"29 Jul 2020 01:30:00 GMT","timeInMunutes":"60", "teamsLink":"https://teams.microsoft.com/l/channel/19%3ae8de8208f2be45a89ef7ebae99440a3a%40thread.tacv2/General?groupId=79783299-3f1e-4adf-a5d7-c7fa68cca14e&tenantId=72f988bf-86f1-41af-91ab-2d7cd011db47"});
+               this.usersListBase.push({"title":"Pantry","description":"Lets catch up today","users":[{"email":"krishan.nagpal@microsoft.com","name":"Krishan Nagpal"}],"tags":["cofee"],"createdBy":{"email":"krishan.nagpal@microsoft.com","name":"Krishan Nagpal"},"scheduledOn":"29 Jul 2020 04:30:00 GMT","timeInMunutes":"600", "teamsLink":"https://teams.microsoft.com/l/channel/19%3ae8de8208f2be45a89ef7ebae99440a3a%40thread.tacv2/General?groupId=79783299-3f1e-4adf-a5d7-c7fa68cca14e&tenantId=72f988bf-86f1-41af-91ab-2d7cd011db47"});
  //              this.usersListBase.push({"title":"Chess anyone?","description":"Have been so long :(","users":["Ajay Suri"],"tags":["entertainment"],"createdBy":"Ajay Suri","scheduledOn":"30/07/20 10:10:15 - pm"});
  //              this.usersListBase.push({"title":"Toastmasters","description":"Learn public speaking & shed your inhibitions","users":["Siddhant Bhatt"],"tags":["public speaking"],"createdBy":"Siddhant Bhatt","scheduledOn":"01/08/20 01:10:15 - pm"});
 
